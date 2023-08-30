@@ -1,13 +1,16 @@
 #! bin/bash
 
-# Install azure cli for any OS
-if [[ $OSTYPE == "darwin"* ]]; then
+# Install azure cli for any OS if not installed
+if [[ $(az --version) == "" ]]; then
+  echo "Installing azure cli"
+  if [[ $OSTYPE == "darwin"* ]]; then
     if [[ $(brew --version) == "" ]]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
     brew update && brew install azure-cli
-else
-    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+  else
+      curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+  fi
 fi
 
 # Login to azure only if not logged in
