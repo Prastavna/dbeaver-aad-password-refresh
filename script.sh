@@ -38,7 +38,7 @@ username=$1
 new_password=$access_token
 
 # Update the password of connection with username
-updated_file=$(echo $decrypted_file | sed -E "s/(\"postgres-jdbc-[a-z0-9]+-[a-z0-9]+\"):(\{\"#connection\":\{\"user\":\"$username\",\"password\":\")([a-z0-9]+)(\"}}\})/\1:\2$new_password\4/g")
+updated_file=$(echo $decrypted_file | sed -E "s/(\"postgres-jdbc-[a-z0-9]+-[a-z0-9]+\"):(\{\"#connection\":\{\"user\":\"$username\",\"password\":\").*(\"})/\1:\2$new_password\3/g")
 
 # Add 16 bytes of initialization vector to the updated file
 _16_bytes_of_initialization_vector=$(echo -n $initialization_vector | dd bs=1 count=16 2>/dev/null)
@@ -49,7 +49,4 @@ encrypted_file=$(openssl enc -aes-128-cbc -K $pass_key -iv $initialization_vecto
 
 # move the encrypted file to the required location
 mv temp-credentials-config.json $path_to_dbeaver_credentials_file
-
-# remove the unencrypted file
-rm temp-credentials-config.json
 
